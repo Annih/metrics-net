@@ -17,8 +17,10 @@ namespace metrics.Tests.Reporting
         {
             RegisterMetrics();
 
-            var reporter = new ConsoleReporter(_metrics);
-            reporter.Run();
+            using(var reporter = new ConsoleReporter(_metrics))
+            {
+                reporter.Run();
+            }
         }
 
         [Test]
@@ -26,8 +28,10 @@ namespace metrics.Tests.Reporting
         {
             RegisterMetrics();
 
-            var reporter = new ConsoleReporter(new JsonReportFormatter(_metrics));
-            reporter.Run();
+            using(var reporter = new ConsoleReporter(new JsonReportFormatter(_metrics)))
+            {
+                reporter.Run();
+            }
         }
 
         [Test]
@@ -40,22 +44,23 @@ namespace metrics.Tests.Reporting
 
             ThreadPool.QueueUserWorkItem(
                 s =>
+                {
+                    using (var reporter = new ConsoleReporter(_metrics))
                     {
-                        var reporter = new ConsoleReporter(_metrics);
-                        reporter.Start(3, TimeUnit.Seconds);
+                        reporter.Start(1, TimeUnit.Seconds);
                         while(true)
                         {
-                            Thread.Sleep(1000);
-                            var runs = reporter.Runs;
-                            if (runs == ticks)
+                            Thread.Sleep(500);
+                            if (reporter.Runs >= ticks)
                             {
                                 block.Set();
+                                return;
                             }    
                         }
                     }
-                );
+                });
 
-            block.WaitOne(TimeSpan.FromSeconds(5));
+            Assert.IsTrue(block.WaitOne(5000));
         }
 
         [Test]
@@ -68,14 +73,16 @@ namespace metrics.Tests.Reporting
             ThreadPool.QueueUserWorkItem(
                 s =>
                 {
-                    var reporter = new ConsoleReporter(_metrics);
-                    reporter.Start(1, TimeUnit.Seconds);
-                    reporter.Stopped += delegate { block.Set(); };
-                    Thread.Sleep(2000);
-                    reporter.Stop();
+                    using (var reporter = new ConsoleReporter(_metrics))
+                    {
+                        reporter.Start(1, TimeUnit.Seconds);
+                        reporter.Stopped += delegate { block.Set(); };
+                        Thread.Sleep(2000);
+                        reporter.Stop();
+                    }
                 });
 
-            block.WaitOne();
+            Assert.IsTrue(block.WaitOne(5000));
         }
 
         private void RegisterMetrics()

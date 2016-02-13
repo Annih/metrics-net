@@ -36,10 +36,10 @@ namespace metrics.Tests.Core
                     meter.Mark();
                     i++;
                 }
-                Thread.Sleep(50000); // Wait for at least one EWMA rate tick
+                Thread.Sleep(5000); // Wait for at least one EWMA rate tick
                 block.Set();
             });
-            block.WaitOne();
+            Assert.IsTrue(block.WaitOne(6000));
 
             Assert.AreEqual(count, meter.Count);
 
