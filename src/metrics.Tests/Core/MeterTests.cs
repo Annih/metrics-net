@@ -1,9 +1,9 @@
-using System;
 using System.Diagnostics;
 using System.Threading;
 using NUnit.Framework;
-using metrics.Core;
-using metrics.Reporting;
+#if COREFX
+using Trace = System.Diagnostics.Debug;
+#endif
 
 namespace metrics.Tests.Core
 {
