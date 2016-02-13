@@ -1,0 +1,33 @@
+{
+    "dependencies": {
+        "metrics": { "target": "project" },
+        "NUnit": "3.0.1",
+        "NUnitLite": "3.0.1"
+    },
+    "frameworks": {
+        "net451": {
+           "frameworkAssemblies": {
+               "System": "4.0.0.0",
+            }
+        },
+        "dnxcore50": {
+            "compilationOptions": {
+                "define": [ "COREFX" ]
+            },
+            "dependencies": {
+                "NETStandard.Library": "1.0.0-*",
+                "System.ObjectModel": "4.0.0-*",
+                "System.Runtime.Serialization.Xml": "4.1.0-*",
+                "System.Threading.Thread": "4.0.0-*",
+                "System.Threading.ThreadPool": "4.0.10-*"
+            }
+        }
+    },
+    "commands": {
+        "test": "metrics.Tests"
+    },
+    "compilationOptions": {
+        "keyFile": "../metrics/metrics.snk",
+        "emitEntryPoint": true
+    }
+}
