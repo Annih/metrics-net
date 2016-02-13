@@ -1,0 +1,37 @@
+{
+    "frameworks": {
+        "net451": {
+            "frameworkAssemblies": {
+                "System": "4.0.0.0",
+                "System.Runtime.Serialization": "4.0.0.0",
+            }
+        },
+        "dnxcore50": {
+            "compilationOptions": {
+                "define": [ "COREFX" ]
+            },
+            "dependencies": {
+                "NETStandard.Library": "1.0.0-*",
+                "System.Diagnostics.Process": "4.1.0-*",
+                "System.Diagnostics.StackTrace": "4.0.1-*",
+                "System.Runtime.Serialization.Xml": "4.1.0-*",
+                "System.Security.Cryptography.RandomNumberGenerator": "4.0.0-*",
+                "System.Threading.Thread": "4.0.0-*",
+            }
+        }
+    },
+    "compilationOptions": {
+        "keyFile": "../metrics/metrics.snk"
+    },
+    "resource": [ "Net/Static/*.js", "Net/Static/*.html" ],
+    "version": "1.0.13",
+    "authors": ["Daniel Crenna"],
+    "owners": [ "Daniel Crenna" ],
+    "description": "Capturing CLR and application-level metrics. So you know what's going on. An idiomatic port of Coda Hale's Metrics for Scala and the JVM.",
+    "summary": "Capturing CLR and application-level metrics. So you know what's going on.",
+    "language": "en-US",
+    "projectUrl": "http://github.com/danielcrenna/metrics-net",
+    "licenseUrl": "https://github.com/danielcrenna/metrics-net/blob/master/LICENSE",
+    "iconUrl": "http://apitize.com.s3.amazonaws.com/logo_metrics.png",
+    "tags": [ "CLR metrics" ]
+}
