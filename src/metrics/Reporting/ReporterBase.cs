@@ -99,7 +99,11 @@ namespace metrics.Reporting
 
             if (Out != null)
             {
+#if COREFX
+                Out.Dispose();
+#else
                 Out.Close();
+#endif
             }
         }
     }

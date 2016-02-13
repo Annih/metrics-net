@@ -11,7 +11,7 @@ namespace metrics.Reporting
         {
             var sb = new StringBuilder();
             var now = DateTime.Now;
-            var dateTime = string.Format("{0} {1}", now.ToShortDateString(), now.ToShortTimeString());
+            var dateTime = string.Format("{0} {1}", now.ToString("d"), now.ToString("t"));
             sb.Append(dateTime);
             sb.Append(' ');
             for (var i = 0; i < (80 - dateTime.Length - 1); i++)

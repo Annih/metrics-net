@@ -17,7 +17,10 @@ using System.Security;
 [assembly: InternalsVisibleTo("metrics.Tests")]
 [assembly: InternalsVisibleTo("metrics.AspNetMvc")]
 [assembly: AllowPartiallyTrustedCallers]
+#if COREFX
+#else
 [assembly: SecurityRules(SecurityRuleSet.Level1)]
+#endif
 
 // Setting ComVisible to false makes the types in this assembly not visible 
 // to COM components.  If you need to access a type in this assembly from 

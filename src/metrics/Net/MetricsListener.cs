@@ -7,6 +7,7 @@ using metrics.Reporting;
 
 namespace metrics.Net
 {
+#if !COREFX
     public class MetricsListener : IDisposable
     {
         /// <summary>
@@ -84,7 +85,6 @@ namespace metrics.Net
             // http://www.singular.co.nz/blog/archive/2008/07/06/finding-preferred-accept-encoding-header-in-csharp.aspx
 
             var mimeType = request.Headers["Accept"] ?? "application/json";
-
             switch (request.RawUrl)
             {
                 case "/static/jquery.js":
@@ -113,7 +113,6 @@ namespace metrics.Net
                     response.StatusDescription = "OK";
                     WriteFinal(PingResponse, response);
                     break;
-
                 case "/metrics":
                     response.StatusCode = 200;
                     response.StatusDescription = "OK";
@@ -185,4 +184,5 @@ namespace metrics.Net
             return "";
         }
     }
+#endif
 }

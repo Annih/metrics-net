@@ -5,6 +5,9 @@ using System.Diagnostics;
 using metrics.Core;
 using metrics.Reporting;
 using metrics.Support;
+#if COREFX
+using metrics.DotnetCoreMocks;
+#endif
 
 namespace metrics
 {
@@ -26,8 +29,10 @@ namespace metrics
         /// <param name="label">A label to distinguish the metric in polling reports</param>
         public static void InstallPerformanceCounterGauge(string category, string counter, string instance, string label)
         {
+#if !COREFX
             var performanceCounter = new PerformanceCounter(category, counter, instance, true);
             GetOrAdd(new MetricName(typeof(Metrics), Environment.MachineName + label), new GaugeMetric<double>(() => performanceCounter.NextValue()));
+#endif
         }
 
         /// <summary>
@@ -38,8 +43,10 @@ namespace metrics
         /// <param name="label">A label to distinguish the metric in polling reports</param>
         public static void InstallPerformanceCounterGauge(string category, string counter, string label)
         {
+#if !COREFX
             var performanceCounter = new PerformanceCounter(category, counter, true);
             GetOrAdd(new MetricName(typeof(Metrics), Environment.MachineName + label), new GaugeMetric<double>(() => performanceCounter.NextValue()));
+#endif
         }
 
         /// <summary>
@@ -135,7 +142,6 @@ namespace metrics
            var justAddedMetric = _metrics.GetOrAdd(metricName, metric);
            return justAddedMetric == null ? metric : (TimerMetric)justAddedMetric;
         }
-
 
         /// <summary>
         /// Creates a new timer metric and registers it under the given type and name

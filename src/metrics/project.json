@@ -1,4 +1,7 @@
 {
+    "dependencies": {
+        "ServiceStack.Text": "3.9.42",
+    },
     "frameworks": {
         "net451": {
             "frameworkAssemblies": {
@@ -15,13 +18,9 @@
                 "System.Diagnostics.Process": "4.1.0-*",
                 "System.Diagnostics.StackTrace": "4.0.1-*",
                 "System.Runtime.Serialization.Xml": "4.1.0-*",
-                "System.Security.Cryptography.RandomNumberGenerator": "4.0.0-*",
                 "System.Threading.Thread": "4.0.0-*",
             }
         }
-    },
-    "compilationOptions": {
-        "keyFile": "../metrics/metrics.snk"
     },
     "resource": [ "Net/Static/*.js", "Net/Static/*.html" ],
     "version": "1.0.13",
