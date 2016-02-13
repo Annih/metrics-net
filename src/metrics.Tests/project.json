@@ -27,7 +27,6 @@
         "test": "metrics.Tests"
     },
     "compilationOptions": {
-        "keyFile": "../metrics/metrics.snk",
         "emitEntryPoint": true
     }
 }

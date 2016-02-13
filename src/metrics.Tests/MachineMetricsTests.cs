@@ -12,7 +12,9 @@ namespace metrics.Tests
 
             MachineMetrics.InstallAll();
 
+#if !COREFX
             Assert.IsTrue(Metrics.All.Count > 0);
+#endif
         }
     }
 }
