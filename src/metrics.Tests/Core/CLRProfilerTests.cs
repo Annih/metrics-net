@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using metrics.Core;
 using NUnit.Framework;
 using metrics.Util;
@@ -20,18 +21,23 @@ namespace metrics.Tests.Core
         public void Can_dump_tracked_threads()
         {
             var factory = new NamedThreadFactory("Can_dump_managed_threads");
-
+            bool shouldContinue = true;
             var thread = factory.New(() =>
-                                         {
-                                             while (true)
-                                             {
-                                                 Debug.Assert("This".Equals("This"));
-                                             }
-                                         });
-
-            thread.Start();
-            
-            Console.WriteLine(CLRProfiler.DumpTrackedThreads());
+                                          {
+                                              while (shouldContinue)
+                                                  Debug.Assert("This".Equals("This"));
+                                          });
+            try
+            {
+                thread.Start();
+                Thread.Sleep(1000);
+                Console.WriteLine(CLRProfiler.DumpTrackedThreads());
+                Thread.Sleep(1000);
+            }
+            finally
+            {
+                shouldContinue = false;
+            }
         }
 
         [Test]

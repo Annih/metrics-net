@@ -86,7 +86,7 @@ namespace metrics.Tests.Reporting
                     reporter.Stop();
                 });
 
-            block.WaitOne();
+            Assert.IsTrue(block.WaitOne(5000));
         }
 
         [Test]
@@ -102,27 +102,27 @@ namespace metrics.Tests.Reporting
                 {
                     using (var reporter = new FileReporter(_filename))
                     {
-                        reporter.Start(3, TimeUnit.Seconds);
+                        reporter.Start(1, TimeUnit.Seconds);
                         while (true)
                         {
-                            Thread.Sleep(1000);
+                            Thread.Sleep(500);
                             var runs = reporter.Runs;
-                            if (runs == ticks)
+                            if (runs >= ticks)
                             {
                                 block.Set();
+                                return;
                             }
                         }
                     }
                 });
 
-            block.WaitOne(TimeSpan.FromSeconds(5));
+            Assert.IsTrue(block.WaitOne(5000));
         }
 
         private static void RegisterMetrics()
         {
             var counter = Metrics.Counter(typeof(CounterTests), "Can_run_with_known_counters_counter");
             counter.Increment(100);
-
             var queue = new Queue<int>();
             Metrics.Gauge(typeof(GaugeTests), "Can_run_with_known_counters_gauge", () => queue.Count);
             queue.Enqueue(1);

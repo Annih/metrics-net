@@ -38,22 +38,21 @@ namespace metrics.Tests.Reporting
 
             ThreadPool.QueueUserWorkItem(
                 s =>
+                {
+                    var reporter = new ConsoleReporter();
+                    reporter.Start(1, TimeUnit.Seconds);
+                    while(true)
                     {
-                        var reporter = new ConsoleReporter();
-                        reporter.Start(3, TimeUnit.Seconds);
-                        while(true)
+                        Thread.Sleep(500);
+                        if (reporter.Runs >= ticks)
                         {
-                            Thread.Sleep(1000);
-                            var runs = reporter.Runs;
-                            if (runs == ticks)
-                            {
-                                block.Set();
-                            }    
+                            block.Set();
+                            return;
                         }
                     }
-                );
+                });
 
-            block.WaitOne(TimeSpan.FromSeconds(5));
+            Assert.IsTrue(block.WaitOne(5000));
         }
 
         [Test]
@@ -73,7 +72,7 @@ namespace metrics.Tests.Reporting
                     reporter.Stop();
                 });
 
-            block.WaitOne();
+            Assert.IsTrue(block.WaitOne(5000));
         }
 
         private static void RegisterMetrics()

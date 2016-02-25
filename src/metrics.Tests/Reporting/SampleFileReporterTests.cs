@@ -34,23 +34,20 @@ namespace metrics.Tests.Reporting
         {
             RegisterMetrics();
 
-            var directory = Path.GetTempPath();
-            var samples = Directory.GetFiles(directory, "*.sample");
-            foreach (var file in samples)
-            {
-                File.Delete(file);
-            }
+            var tmpDir = Path.GetTempPath();
+            var directory = Path.Combine(tmpDir, "sample_json");
 
-            string filename;
+            if (Directory.Exists(directory)) Directory.Delete(directory, true);
+            Directory.CreateDirectory(directory);
+
             using (var reporter = new SampledFileReporter(directory, new JsonReportFormatter()))
             {
                 reporter.Run();
-                samples = Directory.GetFiles(directory, "*.sample");
-                Assert.IsTrue(samples.Length == 1);
-                filename = samples[0];
             }
+            var samples = Directory.GetFiles(directory, "*.sample");
+            Assert.IsTrue(samples.Length == 1);
 
-            var contents = File.ReadAllText(filename);
+            var contents = File.ReadAllText(samples[0]);
             Console.WriteLine(contents);
         }
 
@@ -76,18 +73,16 @@ namespace metrics.Tests.Reporting
                     reporter.Start(1, TimeUnit.Seconds);
                     while (true)
                     {
-                        Thread.Sleep(1000);
-                        var runs = reporter.Runs;
-                        if (runs == ticks)
+                        Thread.Sleep(500);
+                        if (reporter.Runs >= ticks)
                         {
                             block.Set();
-                            reporter.Stop();
-                            reporter.Dispose();
+                            return;
                         }
                     }
                 });
 
-            block.WaitOne(TimeSpan.FromSeconds(5));
+            Assert.IsTrue(block.WaitOne(5000));
             samples = Directory.GetFiles(directory, "*.sample");
             Assert.GreaterOrEqual(samples.Length, 3);
         }
@@ -109,7 +104,7 @@ namespace metrics.Tests.Reporting
                     reporter.Stop();
                 });
 
-            block.WaitOne();
+            Assert.IsTrue(block.WaitOne(5000));
         }
 
         private static void RegisterMetrics()

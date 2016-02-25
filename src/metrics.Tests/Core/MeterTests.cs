@@ -50,7 +50,7 @@ namespace metrics.Tests.Core
                 Thread.Sleep(5000); // Wait for at least one EWMA rate tick
                 block.Set();
             });
-            block.WaitOne();
+            Assert.IsTrue(block.WaitOne(7500));
 
             Assert.AreEqual(count, meter.Count);
 
