@@ -55,6 +55,7 @@ namespace metrics.Reporting
             {
                 Out.Write(Serializer.Serialize(Metrics.AllSorted));
                 Out.Flush();
+                Runs++;
             }
         }
 
