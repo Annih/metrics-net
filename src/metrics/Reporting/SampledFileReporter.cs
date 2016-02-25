@@ -58,6 +58,7 @@ namespace metrics.Reporting
             {
                 Out.Write(_formatter.GetSample());
                 Out.Flush();
+                Runs++;
             }
         }
 
