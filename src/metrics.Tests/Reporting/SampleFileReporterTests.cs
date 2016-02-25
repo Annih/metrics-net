@@ -74,22 +74,22 @@ namespace metrics.Tests.Reporting
             ThreadPool.QueueUserWorkItem(
                 s =>
                 {
-                    var reporter = new SampledFileReporter(directory, new JsonReportFormatter(_metrics));
-                    reporter.Start(1, TimeUnit.Seconds);
-                    while (true)
+                    using (var reporter = new SampledFileReporter(directory, new JsonReportFormatter(_metrics)))
                     {
-                        Thread.Sleep(1000);
-                        var runs = reporter.Runs;
-                        if (runs == ticks)
+                        reporter.Start(1, TimeUnit.Seconds);
+                        while (true)
                         {
-                            block.Set();
-                            reporter.Stop();
-                            reporter.Dispose();
+                            Thread.Sleep(500);
+                            if (reporter.Runs >= ticks)
+                            {
+                                block.Set();
+                                return;
+                            }
                         }
                     }
                 });
 
-            block.WaitOne(TimeSpan.FromSeconds(5));
+            Assert.IsTrue(block.WaitOne(5000));
             samples = Directory.GetFiles(directory, "*.sample");
             Assert.GreaterOrEqual(samples.Length, 3);
         }
@@ -111,7 +111,7 @@ namespace metrics.Tests.Reporting
                     reporter.Stop();
                 });
 
-            block.WaitOne();
+            Assert.IsTrue(block.WaitOne(5000));
         }
 
         private void RegisterMetrics()
